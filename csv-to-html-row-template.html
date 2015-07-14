@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Csv to Html Row</title>
+    <script src="lib/jquery-2.1.4.min.js" type="text/javascript"/>
+    <style type="text/css">
+        #csvform {width:800px; min-height: 900px;}
+        .btngerar {float: right; padding: 10px;}
+    </style>
+</head>
+<body>
+
+<form id="csvform">
+
+    <h3>Paste CSV Here</h3>
+    <textarea id="csvtext" cols="100" rows="10">&nbsp;</textarea>
+
+    <br />
+    <h3>Html Template for Apply CSV Contents</h3>
+    <textarea id="htmltemplate" cols="100" rows="10">&nbsp;</textarea>
+
+    <br />
+    <input id="btngerar" type="button" value="Generate Html"/>
+
+    <br />
+
+</form>
+
+<h3>Html Result</h3>
+<div id="htmlresult">
+
+</div>
+
+
+<script>
+
+    $(document).ready(function() {
+
+        var csv_sample =
+            ';14;Julho;10h;PM de Tangar‡;40931\r' +
+            ';14;Julho;11h;Grupo S‹o Martinho;40931\r' +
+            ';14;Julho;13h;PME N¼ 1115;40931\r' +
+            ';14;Julho;14h;Mangels;40931\r' +
+            ';14;Julho;15h;PME N¼ 1113;40931\r' +
+            ';14;Julho;15h;PME N¼ 1116;40931\r' +
+            ';14;Julho;16h;PME N¼ 1118;40931\r' +
+            ';15;Julho;10h;Pm de Cristal do Sul;40931\r' +
+            ';15;Julho;11h;Jaguar Land Rover;40931\r' +
+            ';15;Julho;13h;Grande Empresa Logistica;40931\r' +
+            ';15;Julho;13h30;PME N¼ 1120;40931\r' +
+            ';15;Julho;14h30;PME N¼ 1121;40931\r' +
+            ';15;Julho;15h30;Schulz;40931\r' +
+            ';16;Julho;10h;Caoa;40931\r' +
+            ';16;Julho;11h;Petrobr‡s RNCE;40931\r' +
+            ';16;Julho;13h;Banco Caterpillar;40931\r' +
+            ';16;Julho;15h;Dow;40931\r' +
+            ';17;Julho;11h;Masterfoods;40931\r' +
+            ';17;Julho;13h;Mondelez;40931\r' +
+            ';17;Julho;14h;PME N¼ 1126;40931\r' +
+            ';20;Julho;13h;Yamaha;40931\r' +
+            ';20;Julho;14h;Compartilhado N¼ 585A;40931\r' +
+            ';20;Julho;14h;Sarpav;40931\r' +
+            ';20;Julho;15h;Compartilhado N¼ 585B;40931';
+
+        $('#csvtext').text(csv_sample);
+
+        var htmltemplate =
+            '        <table class="pseudo-row">\r' +
+            '                 <tr>\r' +
+            '                        <td style="width:7px;background-color:#f3f3f1">&nbsp;</td>\r' +
+            '                        <td style="width:1px;background-color:#000"></td>\r' +
+            '                        <td width="75" style="width:75px; font:bold 26px arial; color:#000; text-align:center;"><a href="http://www.sitetest.com/product?id=${csv_column_5}" style="text-decoration: none; color:#000;" target="_blank">${csv_column_1}</a></td>\r' +
+            '                        <td style="width:1px;background-color:#000"></td>\r' +
+            '                        <td width="189" style="width:189px; font:bold 26px arial; color:#000; text-align:center;"><a href="http://www.sitetest.com/product?id=${csv_column_5}" style="text-decoration: none; color:#000;" target="_blank">${csv_column_2}</a></td>\r' +
+            '                        <td style="width:1px;background-color:#000"></td>\r' +
+            '                        <td width="105" style="width:105px; font:bold 26px arial; color:#000; text-align:center;"><a href="http://www.sitetest.com/product?id=${csv_column_5}" style="text-decoration: none; color:#000;" target="_blank">${csv_column_3}</a></td>\r' +
+            '                        <td style="width:1px;background-color:#000"></td>\r' +
+            '                        <td width="216"><a href="http://www.sitetest.com/product?id=${csv_column_5}" style="text-decoration: none; color:#000;" target="_blank"><img width="216" title="${csv_column_4}" src="lib/samplelogo.png"/></a></td>\r' +
+            '                        <td style="width:1px;background-color:#000"></td>\r' +
+            '                        <td style="width:7px;background-color:#f3f3f1"></td>\r' +
+            '                 </tr>\r' +
+            '        <table>\r';
+
+        $('#htmltemplate').text(htmltemplate);
+
+        function replaceAll(string, token, newtoken) {
+            while (string.indexOf(token) != -1) {
+                string = string.replace(token, newtoken);
+            }
+            return string;
+        }
+
+        $('#btngerar').on('click',function(){
+            var generatedhtmltemp = $('#htmltemplate').val();
+            $('#htmlresult').html(generatedhtmltemp);
+
+            var csvtext = $('#csvtext').val();
+            var csvlines = csvtext.split(/[\n\r]/);
+
+            var generatedlines = '';
+
+                for(var i = 0; i < csvlines.length; i++){
+
+                    var cvsline = csvlines[i];
+                    var csvcolumns = cvsline.split(';');
+
+                    // Replace Expressions
+                    var generatedline = $('#htmlresult .pseudo-row').html();
+                    for(var c = 1;c < csvcolumns.length; c++) {
+                        if (generatedline) {
+                            generatedline = replaceAll(generatedline, '${csv_column_' + c + '}', csvcolumns[c]);
+                        }
+                    }
+
+                    generatedlines += generatedline;
+
+                }
+
+            $('#htmlresult').html('<table cellpadding="0px" cellspacing="0px">'+generatedlines+'</table>');
+
+        });
+
+    });
+    //document.createTextNode(
+
+</script>
+
+</body>
+</html>

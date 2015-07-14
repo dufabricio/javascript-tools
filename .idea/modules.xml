@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/XlsToHtmlTemplateLineGenerator.iml" filepath="$PROJECT_DIR$/XlsToHtmlTemplateLineGenerator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/JavaScriptTools.iml" filepath="$PROJECT_DIR$/JavaScriptTools.iml" />
     </modules>
   </component>
 </project>
